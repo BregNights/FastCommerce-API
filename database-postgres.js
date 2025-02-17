@@ -24,6 +24,11 @@ export class DatabasePostgres {
         return users[0] || null
     }
 
+    async findById(id) {
+        const users = await sql`SELECT * FROM users WHERE id = ${id} LIMIT 1`
+        return users[0] || null
+    }
+
     async update(id, user) {
         const { name, email, password } = user
         await sql`update users set name = ${name}, email = ${email}, password = ${password} WHERE id = ${id}`

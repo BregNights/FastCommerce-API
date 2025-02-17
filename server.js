@@ -1,9 +1,9 @@
 import { fastify } from 'fastify'
 import { DatabasePostgres } from './database-postgres.js'
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 import { secretjwt } from './key-jwt.js'
-import { verifyToken } from './auth.js';
+import { verifyToken } from './auth.js'
 
 
 
@@ -15,6 +15,10 @@ server.post('/api/register', async (request, reply) => {
     try {
         const { name, email, password } = request.body
 
+        if (!name || !email || !password) {
+            return reply.status(200).send({ error: "Todos os campos são obrigatórios: name, email e password" })
+        }
+
         const hashedPassword = bcrypt.hashSync(password, 10)
 
         await database.create({
@@ -23,10 +27,10 @@ server.post('/api/register', async (request, reply) => {
             password: hashedPassword,
         })
 
-        return reply.status(201).send()
+        return reply.status(201).send({ message: "Usuário criado com sucesso!" })
     } catch (error) {
-        console.error("Erro ao registrar usuário:", error);
-        return reply.status(500).send({ error: "Erro interno do servidor" });
+        console.error("Erro ao registrar usuário:", error)
+        return reply.status(500).send({ error: "Erro interno do servidor" })
     }
 
 
@@ -52,8 +56,8 @@ server.post('/api/login', async (request, reply) => {
 
         return reply.status(200).send({ token })
     } catch (error) {
-        console.error("Erro ao fazer login:", error);
-        return reply.status(500).send({ error: "Erro interno do servidor" });
+        console.error("Erro ao fazer login:", error)
+        return reply.status(500).send({ error: "Erro interno do servidor" })
     }
 })
 
@@ -64,8 +68,8 @@ server.get('/api', { preHandler: verifyToken }, async (request, reply) => {
         const users = await database.list(search)
         return reply.status(200).send(users)
     } catch (error) {
-        console.error("Erro ao listar usuários:", error);
-        return reply.status(500).send({ error: "Erro interno do servidor" });
+        console.error("Erro ao listar usuários:", error)
+        return reply.status(500).send({ error: "Erro interno do servidor" })
     }
 })
 
@@ -81,20 +85,30 @@ server.put('/api/:id', { preHandler: verifyToken }, async (request, reply) => {
             password: hashedPassword,
         })
 
-        return reply.status(204).send()
+        return reply.status(204).send({ message: "Usuário editado com sucesso!" })
     } catch (error) {
-        console.error("Erro ao editar usuário:", error);
-        return reply.status(500).send({ error: "Erro interno do servidor" });
+        console.error("Erro ao editar usuário:", error)
+        return reply.status(500).send({ error: "Erro interno do servidor" })
     }
-    
+
 })
 
 server.delete('/api/:id', { preHandler: verifyToken }, async (request, reply) => {
-    const userId = request.params.id
+    try {
+        const userId = request.params.id
+        const existsId = await database.findById(userId)
 
-    await database.delete(userId)
+        if (!existsId) {
+            return reply.status(404).send({ error: "Usuário não encontrado" })
+        }
 
-    return reply.status(204).send()
+        await database.delete(userId)
+        return reply.status(204).send({ message: "Usuário Excluido com sucesso!" })
+
+    } catch (error) {
+        console.error("Erro ao excluir usuário:", error)
+        return reply.status(500).send({ error: "Erro interno do servidor" })
+    }
 })
 
 

@@ -33,5 +33,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsI
 }
 
 ###
-DELETE http://localhost:3333/api/10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MTIyOTYsImV4cCI6MTczOTgxNTg5Nn0.h6v5wp3gVQMaFnGyJt9Zg7qNZb-lfqjfiZCYE9NRRsY
+DELETE http://localhost:3333/api/6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MTcyNDIsImV4cCI6MTczOTgyMDg0Mn0.f2O4udldriBAwXxcC-O0sCvvi1_ncPsaeEm1B5OBUNw
