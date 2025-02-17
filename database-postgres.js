@@ -19,6 +19,11 @@ export class DatabasePostgres {
         return users
     }
 
+    async findByEmail(email) {
+        const users = await sql`SELECT * FROM users WHERE email = ${email} LIMIT 1`
+        return users[0] || null
+    }
+
     async update(id, user) {
         const { name, email, password } = user
         await sql`update users set name = ${name}, email = ${email}, password = ${password} WHERE id = ${id}`

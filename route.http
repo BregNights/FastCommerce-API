@@ -1,25 +1,37 @@
-GET http://localhost:3333/users
+GET http://localhost:3333/api
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MDkxODMsImV4cCI6MTczOTgxMjc4M30.YDUQGEsR0iCsNazQircprUw8mt2KofpCALeHaZKJ7lU
 # ?search=daniel
 ###
 
-POST http://localhost:3333/users
+POST http://localhost:3333/api/register
 Content-type: application/json
 
 {
     "name": "Rodrigo",
-    "email": "rodrigo@mail.com",
+    "email": "rodrigo3@mail.com",
     "password": "123456789"
 }
 
 ###
-PUT http://localhost:3333/users/4
+POST http://localhost:3333/api/login
 Content-type: application/json
 
 {
-    "name": "rodrigos",
-    "email": "rodrigo@mail.com",
-    "password": "123"
+    "email": "rodrigo3@mail.com",
+    "password": "123456789"
 }
 
 ###
-DELETE http://localhost:3333/users/4
+PUT http://localhost:3333/api/10
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MTIyOTYsImV4cCI6MTczOTgxNTg5Nn0.h6v5wp3gVQMaFnGyJt9Zg7qNZb-lfqjfiZCYE9NRRsY
+
+{
+    "name": "Rodrigoteste",
+    "email": "rodrigo3@mail.com",
+    "password": "123456789"
+}
+
+###
+DELETE http://localhost:3333/api/10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MTIyOTYsImV4cCI6MTczOTgxNTg5Nn0.h6v5wp3gVQMaFnGyJt9Zg7qNZb-lfqjfiZCYE9NRRsY
