@@ -1,5 +1,5 @@
 GET http://localhost:3333/api
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3Mzk4MDkxODMsImV4cCI6MTczOTgxMjc4M30.YDUQGEsR0iCsNazQircprUw8mt2KofpCALeHaZKJ7lU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImVtYWlsIjoicm9kcmlnbzNAbWFpbC5jb20iLCJpYXQiOjE3NDAyNDc1MjUsImV4cCI6MTc0MDI1MTEyNX0.dFCaiigQzGEifBFDXDV3O7Mmp-7yC3WruzU7fiv3W70
 # ?search=daniel
 ###
 
