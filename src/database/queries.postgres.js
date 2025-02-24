@@ -1,4 +1,4 @@
-import { sql } from "./db-connect.js";
+import { sql } from "../config/connect.postgres.js";
 
 export class DatabasePostgres {
   async create(user) {

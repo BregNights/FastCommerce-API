@@ -1,15 +1,13 @@
 import { fastify } from "fastify";
-import { DatabasePostgres } from "./database-postgres.js";
+import { DatabasePostgres } from "./src/database/queries.postgres.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { verifyToken } from "./auth.js";
+import { verifyToken } from "./src/middlewares/auth.jwt.js";
 
-const server = fastify();
+const app = fastify();
 const database = new DatabasePostgres();
 
-console.log(`Date: ${new Date()}`);
-
-server.post("/api/register", async (request, reply) => {
+app.post("/api/register", async (request, reply) => {
   try {
     const { name, email, password } = request.body;
     if (!name || !email || !password) {
@@ -42,7 +40,7 @@ server.post("/api/register", async (request, reply) => {
   }
 });
 
-server.post("/api/login", async (request, reply) => {
+app.post("/api/login", async (request, reply) => {
   try {
     const { email, password } = request.body;
     const user = await database.findByEmail(email);
@@ -68,7 +66,7 @@ server.post("/api/login", async (request, reply) => {
   }
 });
 
-server.get("/api/list", { preHandler: verifyToken }, async (request, reply) => {
+app.get("/api/list", { preHandler: verifyToken }, async (request, reply) => {
   try {
     const userIdToken = request.user.id;
     const user = await database.findById(userIdToken);
@@ -88,7 +86,7 @@ server.get("/api/list", { preHandler: verifyToken }, async (request, reply) => {
   }
 });
 
-server.put(
+app.put(
   "/api/edit/:id",
   { preHandler: verifyToken },
   async (request, reply) => {
@@ -125,7 +123,7 @@ server.put(
   }
 );
 
-server.delete(
+app.delete(
   "/api/delete/:id",
   { preHandler: verifyToken },
   async (request, reply) => {
@@ -155,6 +153,6 @@ server.delete(
   }
 );
 
-server.listen({
+app.listen({
   port: process.env.PORT || 3333,
 });
