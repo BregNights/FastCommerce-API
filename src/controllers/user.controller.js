@@ -95,7 +95,7 @@ export async function editUser(request, reply) {
     const userIdToken = request.user.id;
     if (String(userIdToken) !== String(userId)) {
       return reply.status(400).send({
-        error: "Ação não permitida: você só pode excluir sua própria conta.",
+        error: "Ação não permitida: você só pode editar sua própria conta.",
       });
     }
 

@@ -7,19 +7,19 @@ export class DatabasePostgres {
     await sql`insert into users (name, email, password, created_at) VALUES (${name}, ${email}, ${password}, ${timestamp})`;
   }
 
-  async list(search) {
-    let users;
+  // async list(search) {
+  //   let users;
 
-    if (search) {
-      users = await sql`select * from users WHERE name ilike ${
-        "%" + search + "%"
-      }`;
-    } else {
-      users = await sql`select * from users`;
-    }
+  //   if (search) {
+  //     users = await sql`select * from users WHERE name ilike ${
+  //       "%" + search + "%"
+  //     }`;
+  //   } else {
+  //     users = await sql`select * from users`;
+  //   }
 
-    return users;
-  }
+  //   return users;
+  // }
 
   async findByEmail(email) {
     const users = await sql`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
