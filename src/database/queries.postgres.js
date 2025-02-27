@@ -45,8 +45,9 @@ export class DatabasePostgres {
     await sql`insert into products (name, price, stock) VALUES (${name}, ${price}, ${stock})`;
   }
 
-  async getProducts() {
-    const products = await sql`select * from products`;
-    return products
+  async getProducts({ page, limit }) {
+    const offset = (page - 1) * limit;
+
+    return await sql`select * from products order by id limit ${limit} offset ${offset}`;
   }
 }
