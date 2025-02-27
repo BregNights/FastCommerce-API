@@ -39,4 +39,14 @@ export class DatabasePostgres {
   async delete(id) {
     await sql`DELETE FROM users WHERE id = ${id}`;
   }
+
+  async registerProduct(product) {
+    const { name, price, stock } = product;
+    await sql`insert into products (name, price, stock) VALUES (${name}, ${price}, ${stock})`;
+  }
+
+  async getProducts() {
+    const products = await sql`select * from products`;
+    return products
+  }
 }
