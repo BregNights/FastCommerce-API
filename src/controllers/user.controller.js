@@ -177,7 +177,7 @@ export async function getProducts(request, reply) {
       products,
     });
   } catch (error) {
-    console.error("Erro ao listar produtos:", error);
+    console.error("Erro ao buscar produtos:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }
