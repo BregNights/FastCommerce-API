@@ -172,11 +172,11 @@ export async function addProduct(request, reply) {
 
 export async function getProducts(request, reply) {
   try {
-    const maxPage = 100;
+    const maxLimit = 100;
     const { page = 1, limit = 10 } = request.query;
     const products = await database.getProducts({
       page: parseInt(page),
-      limit: Math.min(parseInt(limit), maxPage),
+      limit: Math.min(parseInt(limit), maxLimit),
     });
     return reply.status(200).send({
       products,
