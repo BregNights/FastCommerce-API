@@ -50,4 +50,45 @@ export class DatabasePostgres {
 
     return await sql`select * from products order by id limit ${limit} offset ${offset}`;
   }
+
+  async getProductById(id) {
+    const result = await sql`SELECT * FROM products WHERE id = ${id} LIMIT 1`;
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    return result[0];
+  }
+
+  async getProductPrice(productId) {
+    const product =
+      await sql`SELECT price FROM products WHERE id = ${productId} LIMIT 1`;
+    console.log(product[0]);
+    return product[0].price || null;
+  }
+
+  async addOrder({ user_id, status }) {
+    const result = await sql`
+      INSERT INTO orders (user_id, status, created_at)
+      VALUES (${user_id}, ${status}, NOW())
+      RETURNING id
+    `;
+    return result[0];
+  }
+
+  async addOrderItem({ order_id, product_id, quantity, price }) {
+    await sql`
+      INSERT INTO order_items (order_id, product_id, quantity, price)
+      VALUES (${order_id}, ${product_id}, ${quantity}, ${price})
+    `;
+  }
+
+  async updateProductStock(product_id, quantity) {
+    await sql`
+    UPDATE products
+    SET stock = stock - ${quantity}
+    WHERE id = ${product_id}
+  `;
+  }
 }

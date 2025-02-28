@@ -9,7 +9,7 @@ export async function registerUser(request, reply) {
     const { name, email, password } = request.body;
     if (!name || !email || !password) {
       return reply.status(400).send({
-        message: "Todos os campos são obrigatórios: name, email e password",
+        message: "Todos os campos são obrigatórios: nome, email e senha",
       });
     }
 
@@ -151,7 +151,7 @@ export async function addProduct(request, reply) {
       return reply.status(400).send({ message: "Preço inválido" });
     }
 
-    if (!Number.isInteger(stock) || stock <= 0) {
+    if (!Number.isInteger(stock) || stock < 0) {
       return reply.status(400).send({ message: "Estoque inválido" });
     }
 
@@ -183,6 +183,68 @@ export async function getProducts(request, reply) {
     });
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
+    return reply.status(500).send({ error: "Erro interno do servidor" });
+  }
+}
+export async function createOrder(request, reply) {
+  try {
+    const userId = request.user.id;
+    const { status = "pending", products } = request.body;
+
+    let total_price = 0;
+    const orderItems = [];
+
+    for (const product of products) {
+      if (!product.id || !product.quantity || product.quantity <= 0) {
+        return reply
+          .status(400)
+          .send({ message: "Produto inválido ou quantidade incorreta" });
+      }
+
+      const dbProduct = await database.getProductById(product.id);
+      if (!dbProduct) {
+        return reply
+          .status(404)
+          .send({ message: `Produto ID ${product.id} não encontrado` });
+      }
+
+      console.log(dbProduct)
+      if (dbProduct.stock < product.quantity) {
+        return reply
+          .status(400)
+          .send({ message: `Estoque insuficiente para ${dbProduct.name}` });
+      }
+
+      const itemTotal = dbProduct.price * product.quantity;
+      total_price += itemTotal;
+
+      orderItems.push({
+        product_id: dbProduct.id,
+        quantity: product.quantity,
+        price: dbProduct.price,
+      });
+
+      const order = await database.addOrder({ user_id: userId, status });
+      
+      const productPrice = await database.getProductPrice(product.id);
+
+      await database.addOrderItem({
+        order_id: order.id,
+        product_id: product.id,
+        quantity: product.quantity,
+        price: productPrice,
+      });
+
+      await database.updateProductStock(product.id, product.quantity);
+
+      return reply.status(201).send({
+        message: "Pedido criado com sucesso!",
+        order_id: order.id,
+        total_price,
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao processar pedido:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }
