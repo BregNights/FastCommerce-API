@@ -54,7 +54,17 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o fram
 - `PUT /users/:id` - Atualizar um usuário (Requer autenticação e permissão).
 - `DELETE /users/:id` - Excluir um usuário (Requer autenticação e permissão).
 
-## 🛡 Segurança
+### 🛒 Produtos
 
-- As senhas são armazenadas de forma segura utilizando **bcrypt**.
+- `POST /addproduct` - Adicionar um novo produto (Requer autenticação e permissão).
+- `GET /getproducts` - Listar todos os produtos.
+
+### 📦 Pedidos
+
+- `POST /addorder` - Criar um novo pedido (Requer autenticação e permissão).
+- `GET /orders` - Listar os pedidos do usuário autenticado (Requer autenticação e permissão).
+
+🛡 Segurança
+
+- As senhas são armazenadas de forma segura utilizando bcrypt.
 - Tokens JWT são utilizados para autenticação e proteção dos endpoints.
