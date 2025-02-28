@@ -62,7 +62,7 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o fram
 ### 📦 Pedidos
 
 - `POST /addorder` - Criar um novo pedido (Requer autenticação e permissão).
-- `GET /orders` - Listar os pedidos do usuário autenticado (Requer autenticação e permissão).
+- `GET /getorders` - Listar os pedidos do usuário autenticado (Requer autenticação e permissão).
 
 ### 🛡 Segurança
 
