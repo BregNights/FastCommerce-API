@@ -194,6 +194,8 @@ export async function createOrder(request, reply) {
     let total_price = 0;
     const orderItems = [];
 
+    const order = await database.addOrder({ user_id: userId, status });
+
     for (const product of products) {
       if (!product.id || !product.quantity || product.quantity <= 0) {
         return reply
@@ -208,7 +210,6 @@ export async function createOrder(request, reply) {
           .send({ message: `Produto ID ${product.id} não encontrado` });
       }
 
-      console.log(dbProduct)
       if (dbProduct.stock < product.quantity) {
         return reply
           .status(400)
@@ -224,8 +225,8 @@ export async function createOrder(request, reply) {
         price: dbProduct.price,
       });
 
-      const order = await database.addOrder({ user_id: userId, status });
       
+
       const productPrice = await database.getProductPrice(product.id);
 
       await database.addOrderItem({
@@ -235,14 +236,14 @@ export async function createOrder(request, reply) {
         price: productPrice,
       });
 
-      await database.updateProductStock(product.id, product.quantity);
-
-      return reply.status(201).send({
-        message: "Pedido criado com sucesso!",
-        order_id: order.id,
-        total_price,
-      });
+      await database.updateProductStock({product_id: dbProduct.id, quantity: product.quantity});
     }
+
+    return reply.status(201).send({
+      message: "Pedido criado com sucesso!",
+      order_id: order.id,
+      total_price,
+    });
   } catch (error) {
     console.error("Erro ao processar pedido:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });

@@ -84,7 +84,7 @@ export class DatabasePostgres {
     `;
   }
 
-  async updateProductStock(product_id, quantity) {
+  async updateProductStock({product_id, quantity}) {
     await sql`
     UPDATE products
     SET stock = stock - ${quantity}
