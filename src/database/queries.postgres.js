@@ -84,11 +84,21 @@ export class DatabasePostgres {
     `;
   }
 
-  async updateProductStock({product_id, quantity}) {
+  async updateProductStock({ product_id, quantity }) {
     await sql`
     UPDATE products
     SET stock = stock - ${quantity}
     WHERE id = ${product_id}
   `;
+  }
+
+  async getOrderId(id) {
+    const order = await sql`SELECT id FROM orders WHERE user_id = ${id} LIMIT 1`;
+    return order[0] || null
+  }
+
+  async getItems(id) {
+    const items = await sql`SELECT * FROM order_items WHERE order_id = ${id}`;
+    return items || null
   }
 }

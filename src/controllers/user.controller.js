@@ -186,7 +186,7 @@ export async function getProducts(request, reply) {
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }
-export async function createOrder(request, reply) {
+export async function addOrder(request, reply) {
   try {
     const userId = request.user.id;
     const { status = "pending", products } = request.body;
@@ -225,8 +225,6 @@ export async function createOrder(request, reply) {
         price: dbProduct.price,
       });
 
-      
-
       const productPrice = await database.getProductPrice(product.id);
 
       await database.addOrderItem({
@@ -236,7 +234,10 @@ export async function createOrder(request, reply) {
         price: productPrice,
       });
 
-      await database.updateProductStock({product_id: dbProduct.id, quantity: product.quantity});
+      await database.updateProductStock({
+        product_id: dbProduct.id,
+        quantity: product.quantity,
+      });
     }
 
     return reply.status(201).send({
@@ -246,6 +247,23 @@ export async function createOrder(request, reply) {
     });
   } catch (error) {
     console.error("Erro ao processar pedido:", error);
+    return reply.status(500).send({ error: "Erro interno do servidor" });
+  }
+}
+
+export async function getOrders(request, reply) {
+  try {
+    const userId = request.user.id;
+    const orderId = await database.getOrderId(userId);
+    if(!orderId) {
+      return reply
+          .status(400)
+          .send({ message: "Não há pedidos ainda" });
+    }
+    const getItems = await database.getItems(orderId.id)
+    return reply.status(200).send({getItems})
+  } catch (error) {
+    console.error("Erro na consulta dos pedidos:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }

@@ -7,8 +7,8 @@ import {
   deleteUser,
   addProduct,
   getProducts,
-  createOrder,
-  // getOrders,
+  addOrder,
+  getOrders,
 } from "../controllers/user.controller.js";
 
 async function userRoutes(app) {
@@ -21,8 +21,8 @@ async function userRoutes(app) {
   app.post("/addproduct", { preHandler: verifyToken }, addProduct);
   app.get("/getproducts", getProducts);
 
-  app.post("/createorder", { preHandler: verifyToken }, createOrder);
-  // app.get("/getorders", getOrders)
+  app.post("/addorder", { preHandler: verifyToken }, addOrder);
+  app.get("/getorders", { preHandler: verifyToken }, getOrders)
 }
 
 export default userRoutes;
