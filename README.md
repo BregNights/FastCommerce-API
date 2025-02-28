@@ -64,7 +64,7 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o fram
 - `POST /addorder` - Criar um novo pedido (Requer autenticação e permissão).
 - `GET /orders` - Listar os pedidos do usuário autenticado (Requer autenticação e permissão).
 
-🛡 Segurança
+### 🛡 Segurança
 
 - As senhas são armazenadas de forma segura utilizando bcrypt.
 - Tokens JWT são utilizados para autenticação e proteção dos endpoints.
