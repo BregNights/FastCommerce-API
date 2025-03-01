@@ -204,6 +204,7 @@ export async function addOrder(request, reply) {
       }
 
       const dbProduct = await database.getProductById(product.id);
+      console.log(dbProduct)
       if (!dbProduct) {
         return reply
           .status(404)
