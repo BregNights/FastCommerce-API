@@ -1,4 +1,4 @@
-# Users Node API
+# FastCommerce-API
 
 Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o framework **Fastify** e banco de dados **PostgreSQL**. A API permite a criação, leitura, atualização e exclusão (CRUD) de usuários, além de contar com autenticação e autorização via JWT.
 
