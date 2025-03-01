@@ -14,9 +14,11 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** e o framework **F
 ## 📌 Funcionalidades
 
 - Cadastro de usuários com senha criptografada.
-- Autenticação via JWT.
+- Autenticação e autorização via JWT.
 - Operações CRUD para gerenciamento de usuários.
-- Validações e segurança com Fastify.
+- Gerenciamento de produtos (criação e listagem).
+- Gerenciamento de pedidos (criação e listagem).
+
 
 ## 📦 Instalação
 
