@@ -9,7 +9,7 @@ export async function registerUser(request, reply) {
     const { name, email, password } = request.body;
     if (!name || !email || !password) {
       return reply.status(400).send({
-        message: "Todos os campos são obrigatórios: nome, email e senha",
+        message: "Todos os campos são obrigatórios",
       });
     }
 
@@ -144,7 +144,7 @@ export async function addProduct(request, reply) {
     if (!name || price == null || stock == null) {
       return reply
         .status(400)
-        .send({ message: "Todos os campos precisam estar preenchidos" });
+        .send({ message: "Todos os campos são obrigatórios" });
     }
 
     if (typeof price !== "number" || price <= 0) {
