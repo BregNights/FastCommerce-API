@@ -192,7 +192,6 @@ export async function addOrder(request, reply) {
     const { status = "pending", products } = request.body;
 
     let total_price = 0;
-    const orderItems = [];
 
     const order = await database.addOrder({ user_id: userId, status });
 
@@ -204,7 +203,7 @@ export async function addOrder(request, reply) {
       }
 
       const dbProduct = await database.getProductById(product.id);
-      console.log(dbProduct)
+
       if (!dbProduct) {
         return reply
           .status(404)
@@ -219,12 +218,6 @@ export async function addOrder(request, reply) {
 
       const itemTotal = dbProduct.price * product.quantity;
       total_price += itemTotal;
-
-      orderItems.push({
-        product_id: dbProduct.id,
-        quantity: product.quantity,
-        price: dbProduct.price,
-      });
 
       const productPrice = await database.getProductPrice(product.id);
 
@@ -256,13 +249,13 @@ export async function getOrders(request, reply) {
   try {
     const userId = request.user.id;
     const orderId = await database.getOrderId(userId);
-    if(!orderId) {
+    if (!orderId) {
       return reply
-          .status(400)
-          .send({ message: "Não há pedidos ainda" });
+        .status(400)
+        .send({ message: "Não há pedidos em sua conta." });
     }
-    const getItems = await database.getItems(orderId.id)
-    return reply.status(200).send({getItems})
+    const getItems = await database.getItems(orderId.id);
+    return reply.status(200).send({ getItems });
   } catch (error) {
     console.error("Erro na consulta dos pedidos:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
