@@ -50,7 +50,7 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o fram
 - `POST /login` - Login e obtenção de token JWT.
 
 ### 👤 Usuários
-- `GET /users` - Listar todos os usuários (Requer autenticação).
+- `GET /users` - Listar o usuário autenticado (Requer autenticação).
 - `PUT /users/:id` - Atualizar um usuário (Requer autenticação e permissão).
 - `DELETE /users/:id` - Excluir um usuário (Requer autenticação e permissão).
 
@@ -62,7 +62,7 @@ Este é um projeto de API RESTful desenvolvido com **Node.js** utilizando o fram
 ### 📦 Pedidos
 
 - `POST /addorder` - Criar um novo pedido (Requer autenticação e permissão).
-- `GET /getorders` - Listar os pedidos do usuário autenticado (Requer autenticação e permissão).
+- `GET /getorders` - Listar os pedidos do usuário autenticado (Requer autenticação).
 
 ### 🛡 Segurança
 
