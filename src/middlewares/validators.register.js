@@ -11,11 +11,12 @@ export async function isValidEmail(request, reply) {
   }
 }
 
-export async function userFields(request, reply) {
+export function userFields(request, reply, done) {
   const { name, email, password } = request.body;
   if (!name || !email || !password) {
     return reply.status(400).send({
       message: "Todos os campos são obrigatórios",
     });
   }
+  done();
 }

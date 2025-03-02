@@ -1,8 +1,8 @@
 import { DatabasePostgres } from "../database/queries.postgres.js";
 import bcrypt from "bcryptjs";
-import { authenticateUser } from "../services/auth.service.js";
-import { generateToken } from "../Utils/jwtUtils.js";
-import { isValidUser } from "../Utils/user.exists.js";
+import { authenticateUser } from "../services/auth.service.user.js";
+import { generateToken } from "../utils/jwtUtils.js";
+import { isValidUserId, isAuthorizedUser } from "../utils/validators.js";
 
 export const database = new DatabasePostgres();
 
@@ -45,16 +45,19 @@ export async function loginUser(request, reply) {
 
 export async function getUser(request, reply) {
   try {
-    const user = await isValidUser(request);
-    if (user.error) {
-      return reply.status(404).send({ message: "Usuário não encontrado" });
+    const userId = request.user.id;
+    const result = await isValidUserId(userId);
+    if (result.error) {
+      return reply.status(404).send({ message: result.error });
     }
 
-    return reply.status(200).send({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    });
+    const user = {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+    };
+
+    return reply.status(200).send(user);
   } catch (error) {
     console.error("Erro ao buscar usuário:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
@@ -65,16 +68,16 @@ export async function editUser(request, reply) {
   try {
     const userId = request.params.id;
 
-    const existsId = await database.findById(userId);
-    if (!existsId) {
-      return reply.status(404).send({ error: "Usuário não encontrado" });
+    const result = await isValidUserId(userId);
+    if (result.error) {
+      return reply.status(404).send({ message: result.error });
     }
 
     const userIdToken = request.user.id;
-    if (String(userIdToken) !== String(userId)) {
-      return reply.status(401).send({
-        error: "Ação não permitida.",
-      });
+
+    const authorizedUser = isAuthorizedUser(userId, userIdToken);
+    if (authorizedUser.error) {
+      return reply.status(401).send({ message: authorizedUser.error });
     }
 
     const { name, password } = request.body;

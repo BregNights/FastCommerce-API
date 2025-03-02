@@ -14,3 +14,4 @@ export async function authenticateUser(email, password) {
 
   return user;
 }
+
