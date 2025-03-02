@@ -1,26 +1,14 @@
 import { DatabasePostgres } from "../database/queries.postgres.js";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-// import { isValidEmail } from "../Utils/validators.js";
+import { authenticateUser } from "../services/auth.service.js";
+import { generateToken } from "../Utils/jwtUtils.js";
+import { isValidUser } from "../Utils/user.exists.js";
 
 export const database = new DatabasePostgres();
 
 export async function registerUser(request, reply) {
   try {
     const { name, email, password } = request.body;
-    if (!name || !email || !password) {
-      return reply.status(400).send({
-        message: "Todos os campos são obrigatórios",
-      });
-    }
-
-    // const userEmail = await database.findByEmail(email);
-    // if (userEmail) {
-    //   return reply.status(409).send({
-    //     message:
-    //       "O e-mail informado já está cadastrado. Por favor, utilize outro ou recupere sua senha.",
-    //   });
-    // }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     await database.create({
@@ -29,9 +17,7 @@ export async function registerUser(request, reply) {
       password: hashedPassword,
     });
 
-    return reply.status(201).send({
-      message: "Usuário criado com sucesso!",
-    });
+    return reply.status(201).send({ message: "Usuário criado com sucesso!" });
   } catch (error) {
     console.error("Erro ao registrar usuário:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
@@ -41,21 +27,14 @@ export async function registerUser(request, reply) {
 export async function loginUser(request, reply) {
   try {
     const { email, password } = request.body;
-    const user = await database.findByEmail(email);
-    if (!user) {
-      return reply.status(401).send({ message: "E-mail ou senha inválidos" });
+
+    const result = await authenticateUser(email, password);
+
+    if (result.error) {
+      return reply.status(401).send({ message: result.error });
     }
 
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
-    if (!isPasswordValid) {
-      return reply.status(401).send({ message: "E-mail ou senha inválidos" });
-    }
-
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWTKEY,
-      { expiresIn: "1h" }
-    );
+    const token = generateToken(result);
 
     return reply.status(200).send({ token });
   } catch (error) {
@@ -66,10 +45,8 @@ export async function loginUser(request, reply) {
 
 export async function getUser(request, reply) {
   try {
-    const userIdToken = request.user.id;
-    const user = await database.findById(userIdToken);
-
-    if (!user) {
+    const user = await isValidUser(request);
+    if (user.error) {
       return reply.status(404).send({ message: "Usuário não encontrado" });
     }
 

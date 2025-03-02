@@ -1,5 +1,5 @@
 import { verifyToken } from "../middlewares/auth.jwt.js";
-import { isValidEmail } from "../Utils/validators.js";
+import { userFields, isValidEmail } from "../middlewares/validators.register.js";
 import {
   registerUser,
   loginUser,
@@ -13,7 +13,11 @@ import {
 } from "../controllers/user.controller.js";
 
 async function userRoutes(app) {
-  app.post("/register",{ preHandler: isValidEmail }, registerUser);
+  app.post(
+    "/register",
+    { preHandler: [userFields, isValidEmail] },
+    registerUser
+  );
   app.post("/login", loginUser);
   app.get("/getuser", { preHandler: verifyToken }, getUser);
   app.put("/put/:id", { preHandler: verifyToken }, editUser);
@@ -23,7 +27,7 @@ async function userRoutes(app) {
   app.get("/getproducts", getProducts);
 
   app.post("/addorder", { preHandler: verifyToken }, addOrder);
-  app.get("/getorders", { preHandler: verifyToken }, getOrders)
+  app.get("/getorders", { preHandler: verifyToken }, getOrders);
 }
 
 export default userRoutes;

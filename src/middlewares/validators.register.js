@@ -9,5 +9,13 @@ export async function isValidEmail(request, reply) {
         "O e-mail informado já está cadastrado. Por favor, utilize outro ou recupere sua senha.",
     });
   }
-  return true;
+}
+
+export async function userFields(request, reply) {
+  const { name, email, password } = request.body;
+  if (!name || !email || !password) {
+    return reply.status(400).send({
+      message: "Todos os campos são obrigatórios",
+    });
+  }
 }
