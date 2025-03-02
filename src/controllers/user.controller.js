@@ -1,8 +1,9 @@
 import { DatabasePostgres } from "../database/queries.postgres.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+// import { isValidEmail } from "../Utils/validators.js";
 
-const database = new DatabasePostgres();
+export const database = new DatabasePostgres();
 
 export async function registerUser(request, reply) {
   try {
@@ -13,13 +14,13 @@ export async function registerUser(request, reply) {
       });
     }
 
-    const userEmail = await database.findByEmail(email);
-    if (userEmail) {
-      return reply.status(409).send({
-        message:
-          "O e-mail informado já está cadastrado. Por favor, utilize outro ou recupere sua senha.",
-      });
-    }
+    // const userEmail = await database.findByEmail(email);
+    // if (userEmail) {
+    //   return reply.status(409).send({
+    //     message:
+    //       "O e-mail informado já está cadastrado. Por favor, utilize outro ou recupere sua senha.",
+    //   });
+    // }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     await database.create({
@@ -94,7 +95,7 @@ export async function editUser(request, reply) {
 
     const userIdToken = request.user.id;
     if (String(userIdToken) !== String(userId)) {
-      return reply.status(400).send({
+      return reply.status(401).send({
         error: "Ação não permitida.",
       });
     }
@@ -125,7 +126,7 @@ export async function deleteUser(request, reply) {
 
     const userIdToken = request.user.id;
     if (String(userIdToken) !== String(userId)) {
-      return reply.status(400).send({
+      return reply.status(401).send({
         error: "Ação não permitida.",
       });
     }

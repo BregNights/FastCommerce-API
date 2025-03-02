@@ -1,4 +1,5 @@
 import { verifyToken } from "../middlewares/auth.jwt.js";
+import { isValidEmail } from "../Utils/validators.js";
 import {
   registerUser,
   loginUser,
@@ -12,7 +13,7 @@ import {
 } from "../controllers/user.controller.js";
 
 async function userRoutes(app) {
-  app.post("/register", registerUser);
+  app.post("/register",{ preHandler: isValidEmail }, registerUser);
   app.post("/login", loginUser);
   app.get("/getuser", { preHandler: verifyToken }, getUser);
   app.put("/put/:id", { preHandler: verifyToken }, editUser);
