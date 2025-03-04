@@ -1,6 +1,7 @@
 import { isValidUserId, isAuthorizedUser } from "../utils/validators.js";
 
-export async function verifyUserId (request, reply) {
+export async function verifyUserId(request, reply) {
+  try {
     const userId = request.params.id;
 
     const result = await isValidUserId(userId);
@@ -13,7 +14,8 @@ export async function verifyUserId (request, reply) {
     if (authorizedUser.error) {
       return reply.status(401).send({ message: authorizedUser.error });
     }
+  } catch (error) {
+    console.error(error);
+    return reply.status(500).send({ error: "Erro interno do servidor" });
+  }
 }
-
-
-    
