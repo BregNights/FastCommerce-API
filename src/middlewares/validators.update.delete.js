@@ -1,4 +1,3 @@
-// import { database } from "../controllers/user.controller.js";
 import { isValidUserId, isAuthorizedUser } from "../utils/validators.js";
 
 export async function verifyUserId (request, reply) {
