@@ -67,27 +67,14 @@ export async function getUser(request, reply) {
 export async function updateUser(request, reply) {
   try {
     const userId = request.params.id;
-
-    const result = await isValidUserId(userId);
-    if (result.error) {
-      return reply.status(404).send({ message: result.error });
-    }
-
-    const userIdToken = request.user.id;
-
-    const authorizedUser = isAuthorizedUser(userId, userIdToken);
-    if (authorizedUser.error) {
-      return reply.status(401).send({ message: authorizedUser.error });
-    }
-
     const { name, password } = request.body;
+
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     await database.update(userId, {
       name,
       password: hashedPassword,
     });
-
     return reply.status(200).send({ message: "Usuário editado com sucesso!" });
   } catch (error) {
     console.error("Erro ao editar usuário:", error);
@@ -98,17 +85,6 @@ export async function updateUser(request, reply) {
 export async function deleteUser(request, reply) {
   try {
     const userId = request.params.id;
-
-    const result = await isValidUserId(userId);
-    if (result.error) {
-      return reply.status(404).send({ message: result.error });
-    }
-
-    const userIdToken = request.user.id;
-    const authorizedUser = isAuthorizedUser(userId, userIdToken);
-    if (authorizedUser.error) {
-      return reply.status(401).send({ message: authorizedUser.error });
-    }
 
     await database.delete(userId);
     return reply.status(200).send({ message: "Usuário Excluido com sucesso!" });
