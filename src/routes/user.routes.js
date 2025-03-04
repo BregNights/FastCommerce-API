@@ -4,16 +4,16 @@ import {
   isValidEmail,
 } from "../middlewares/validators.register.js";
 import { verifyUserId } from "../middlewares/validators.update.delete.js";
+import {  addProduct,
+  getProducts,
+  addOrder,
+  getOrders} from "../controllers/product.controller.js";
 import {
   registerUser,
   loginUser,
   getUser,
   updateUser,
   deleteUser,
-  addProduct,
-  getProducts,
-  addOrder,
-  getOrders,
 } from "../controllers/user.controller.js";
 
 async function userRoutes(app) {
