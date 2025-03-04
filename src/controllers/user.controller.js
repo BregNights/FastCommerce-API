@@ -99,16 +99,15 @@ export async function deleteUser(request, reply) {
   try {
     const userId = request.params.id;
 
-    const existsId = await database.findById(userId);
-    if (!existsId) {
-      return reply.status(404).send({ error: "Usuário não encontrado" });
+    const result = await isValidUserId(userId);
+    if (result.error) {
+      return reply.status(404).send({ message: result.error });
     }
 
     const userIdToken = request.user.id;
-    if (String(userIdToken) !== String(userId)) {
-      return reply.status(401).send({
-        error: "Ação não permitida.",
-      });
+    const authorizedUser = isAuthorizedUser(userId, userIdToken);
+    if (authorizedUser.error) {
+      return reply.status(401).send({ message: authorizedUser.error });
     }
 
     await database.delete(userId);
