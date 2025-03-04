@@ -4,7 +4,7 @@ import {
   registerUser,
   loginUser,
   getUser,
-  editUser,
+  updateUser,
   deleteUser,
   addProduct,
   getProducts,
@@ -20,8 +20,8 @@ async function userRoutes(app) {
   );
   app.post("/login", loginUser);
   app.get("/getuser", { preHandler: verifyToken }, getUser);
-  app.put("/put/:id", { preHandler: verifyToken }, editUser);
-  app.delete("/delete/:id", { preHandler: verifyToken }, deleteUser);
+  app.put("/updateuser/:id", { preHandler: verifyToken }, updateUser);
+  app.delete("/deleteuser/:id", { preHandler: verifyToken }, deleteUser);
 
   app.post("/addproduct", { preHandler: verifyToken }, addProduct);
   app.get("/getproducts", getProducts);

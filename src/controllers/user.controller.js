@@ -64,7 +64,7 @@ export async function getUser(request, reply) {
   }
 }
 
-export async function editUser(request, reply) {
+export async function updateUser(request, reply) {
   try {
     const userId = request.params.id;
 
