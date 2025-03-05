@@ -11,12 +11,12 @@ export async function isValidEmail(request, reply) {
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao verificar se o e-mail ja existe", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }
 
-export function userFields(request, reply, done) {
+export function checkUserFields(request, reply, done) {
   try {
     const { name, email, password } = request.body;
     if (!name || !email || !password) {
@@ -26,7 +26,10 @@ export function userFields(request, reply, done) {
     }
     done();
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Erro ao verificar se os campos de registro estão completos",
+      error
+    );
     return reply.status(500).send({ error: "Erro interno do servidor" });
   }
 }

@@ -1,10 +1,13 @@
 import { verifyToken } from "../middlewares/auth.jwt.js";
 import {
-  userFields,
+  checkUserFields,
   isValidEmail,
-} from "../middlewares/validators.register.js";
-import { verifyUserId } from "../middlewares/validators.update.delete.js";
-
+} from "../middlewares/check.register.js";
+import {
+  checkUserId,
+  checkUserParamsAndId,
+} from "../middlewares/check.update.delete.js";
+import { checkAddProduct } from "../middlewares/check.addproduct.js";
 import {
   registerUser,
   loginUser,
@@ -18,23 +21,27 @@ import { addOrder, getOrders } from "../controllers/order.controller.js";
 async function userRoutes(app) {
   app.post(
     "/register",
-    { preHandler: [userFields, isValidEmail] },
+    { preHandler: [checkUserFields, isValidEmail] },
     registerUser
   );
   app.post("/login", loginUser);
   app.get("/getuser", { preHandler: verifyToken }, getUser);
   app.put(
     "/updateuser/:id",
-    { preHandler: [verifyToken, verifyUserId] },
+    { preHandler: [verifyToken, checkUserId, checkUserParamsAndId] },
     updateUser
   );
   app.delete(
     "/deleteuser/:id",
-    { preHandler: [verifyToken, verifyUserId] },
+    { preHandler: [verifyToken, checkUserId, checkUserParamsAndId] },
     deleteUser
   );
 
-  app.post("/addproduct", { preHandler: verifyToken }, addProduct);
+  app.post(
+    "/addproduct",
+    { preHandler: [verifyToken, checkAddProduct] },
+    addProduct
+  );
   app.get("/getproducts", getProducts);
 
   app.post("/addorder", { preHandler: verifyToken }, addOrder);
