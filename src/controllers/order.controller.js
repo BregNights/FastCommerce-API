@@ -1,4 +1,5 @@
 import { database } from "../controllers/user.controller.js";
+import { isValidOrderId } from "../utils/validators.js";
 
 export async function addOrder(request, reply) {
   try {
@@ -62,13 +63,12 @@ export async function addOrder(request, reply) {
 export async function getOrders(request, reply) {
   try {
     const userId = request.user.id;
-    const orderId = await database.getOrderId(userId);
-    if (!orderId) {
-      return reply
-        .status(400)
-        .send({ message: "Não há pedidos em sua conta." });
+    const result = await isValidOrderId(userId);
+    if (result.error) {
+      return reply.status(400).send({ message: result.error });
     }
-    const getItems = await database.getItems(orderId.id);
+
+    const getItems = await database.getItems(result.id);
     return reply.status(200).send({ getItems });
   } catch (error) {
     console.error("Erro na consulta dos pedidos:", error);

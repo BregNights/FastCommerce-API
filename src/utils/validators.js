@@ -15,3 +15,10 @@ export function isAuthorizedUser(idparams, idtoken) {
   }
   return true;
 }
+
+export async function isValidOrderId(id) {
+  const orderId = await database.getOrderId(id);
+  if (!orderId) {
+    return { error: "Não há pedidos em sua conta." };
+  }
+}
