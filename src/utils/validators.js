@@ -21,6 +21,7 @@ export async function isValidOrderId(id) {
   if (!orderId) {
     return { error: "Não há pedidos em sua conta." };
   }
+  return id
 }
 
 export function validationProduct(product) {
@@ -48,4 +49,5 @@ export function checkQuantity(dbStock, userQuantity) {
   if (dbStock < userQuantity) {
     return { error: `Estoque insuficiente` };
   }
+  return true
 }

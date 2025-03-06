@@ -33,26 +33,31 @@ export async function addOrder(request, reply) {
 
       const itemTotal = dbProductResult.price * product.quantity;
       total_price += itemTotal;
-
-      // const productPrice = await database.getProductPrice(product.id);
-
-      // await database.addOrderItem({
-      //   order_id: order.id,
-      //   product_id: product.id,
-      //   quantity: product.quantity,
-      //   price: productPrice,
-      // });
-
-      //   await database.updateProductStock({
-      //     product_id: dbProductResult.id,
-      //     quantity: product.quantity,
-      //   });
     }
+
     const order = await database.addOrder({ user_id: userId, status });
+
+    for (const product of products) {
+      console.log(product);
+      console.log(order);
+      const productPrice = await database.getProductPrice(product.id);
+
+      await database.addOrderItem({
+        order_id: order.id,
+        product_id: product.id,
+        quantity: product.quantity,
+        price: productPrice,
+      });
+
+      await database.updateProductStock({
+        product_id: product.id,
+        quantity: product.quantity,
+      });
+    }
 
     return reply.status(201).send({
       message: "Pedido criado com sucesso!",
-      // order_id: order.id,
+      order_id: order.id,
       total_price,
     });
   } catch (error) {
@@ -69,8 +74,10 @@ export async function getOrders(request, reply) {
       return reply.status(400).send({ message: result.error });
     }
 
-    const getItems = await database.getItems(result.id);
-    return reply.status(200).send({ getItems });
+    const getIdOrders = await database.getOrderId(result);
+    const showOrders = await database.getOrders(getIdOrders.id);
+
+    return reply.status(200).send({ showOrders });
   } catch (error) {
     console.error("Erro na consulta dos pedidos:", error);
     return reply.status(500).send({ error: "Erro interno do servidor" });

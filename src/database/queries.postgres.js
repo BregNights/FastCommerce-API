@@ -87,7 +87,7 @@ export class DatabasePostgres {
     return order[0] || null;
   }
 
-  async getItems(id) {
+  async getOrders(id) {
     const items = await sql`SELECT * FROM order_items WHERE order_id = ${id}`;
     
     return items || null;
