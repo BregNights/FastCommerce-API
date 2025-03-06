@@ -22,3 +22,30 @@ export async function isValidOrderId(id) {
     return { error: "Não há pedidos em sua conta." };
   }
 }
+
+export function validationProduct(product) {
+  if (
+    !product.id ||
+    typeof product.id !== "number" ||
+    !product.quantity ||
+    typeof product.quantity !== "number" ||
+    product.quantity <= 0
+  ) {
+    return { error: "Produto inválido ou quantidade incorreta" };
+  }
+  return product;
+}
+
+export async function isValidProductId(id) {
+  const productId = await database.getProductById(id);
+  if (!productId) {
+    return { error: `Produto não encontrado` };
+  }
+  return productId;
+}
+
+export function checkQuantity(dbStock, userQuantity) {
+  if (dbStock < userQuantity) {
+    return { error: `Estoque insuficiente` };
+  }
+}

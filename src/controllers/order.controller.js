@@ -1,5 +1,10 @@
 import { database } from "../controllers/user.controller.js";
-import { isValidOrderId } from "../utils/validators.js";
+import {
+  isValidOrderId,
+  isValidProductId,
+  validationProduct,
+  checkQuantity,
+} from "../utils/validators.js";
 
 export async function addOrder(request, reply) {
   try {
@@ -8,50 +13,46 @@ export async function addOrder(request, reply) {
 
     let total_price = 0;
 
-    const order = await database.addOrder({ user_id: userId, status });
-
     for (const product of products) {
-      if (!product.id || !product.quantity || product.quantity <= 0) {
-        return reply
-          .status(400)
-          .send({ message: "Produto inválido ou quantidade incorreta" });
+      const resultProduct = validationProduct(product);
+      if (resultProduct.error) {
+        return reply.status(400).send({ message: resultProduct.error });
       }
 
-      const dbProduct = await database.getProductById(product.id);
-
-      if (!dbProduct) {
-        return reply
-          .status(404)
-          .send({ message: `Produto ID ${product.id} não encontrado` });
+      const dbProductResult = await isValidProductId(resultProduct.id);
+      if (dbProductResult.error) {
+        return reply.status(404).send({ message: dbProductResult.error });
       }
 
-      if (dbProduct.stock < product.quantity) {
-        return reply
-          .status(400)
-          .send({ message: `Estoque insuficiente para ${dbProduct.name}` });
+      const stockDb = dbProductResult.stock;
+      const quantityUser = product.quantity;
+      const verifyStock = checkQuantity(stockDb, quantityUser);
+      if (verifyStock.error) {
+        return reply.status(400).send({ message: verifyStock.error });
       }
 
-      const itemTotal = dbProduct.price * product.quantity;
+      const itemTotal = dbProductResult.price * product.quantity;
       total_price += itemTotal;
 
-      const productPrice = await database.getProductPrice(product.id);
+      // const productPrice = await database.getProductPrice(product.id);
 
-      await database.addOrderItem({
-        order_id: order.id,
-        product_id: product.id,
-        quantity: product.quantity,
-        price: productPrice,
-      });
+      // await database.addOrderItem({
+      //   order_id: order.id,
+      //   product_id: product.id,
+      //   quantity: product.quantity,
+      //   price: productPrice,
+      // });
 
-      await database.updateProductStock({
-        product_id: dbProduct.id,
-        quantity: product.quantity,
-      });
+      //   await database.updateProductStock({
+      //     product_id: dbProductResult.id,
+      //     quantity: product.quantity,
+      //   });
     }
+    const order = await database.addOrder({ user_id: userId, status });
 
     return reply.status(201).send({
       message: "Pedido criado com sucesso!",
-      order_id: order.id,
+      // order_id: order.id,
       total_price,
     });
   } catch (error) {
