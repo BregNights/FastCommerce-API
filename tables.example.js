@@ -11,7 +11,7 @@ async function addTableUsers() {
 )`;
   console.log("Tabela 'users' criada com sucesso!");
 }
-// addTableUsers()
+addTableUsers()
 
 async function addTableProducts() {
   await sql`
@@ -24,7 +24,7 @@ async function addTableProducts() {
   `;
   console.log("Tabela 'products' criada com sucesso!");
 }
-// addTableProducts()
+addTableProducts()
 
 async function addTableOrders() {
   await sql`CREATE TABLE IF NOT EXISTS orders (
@@ -36,7 +36,7 @@ async function addTableOrders() {
 )`;
   console.log("Tabela 'orders' criada com sucesso!");
 }
-// addTableOrders()
+addTableOrders()
 
 async function addTableOrderItems() {
   await sql`CREATE TABLE IF NOT EXISTS order_items (
@@ -50,4 +50,4 @@ async function addTableOrderItems() {
 )`;
   console.log("Tabela 'order_items' criada com sucesso!");
 }
-// addTableOrderItems()
+addTableOrderItems()
