@@ -1,7 +1,7 @@
 import { DatabasePostgres } from "../database/queries.postgres.js";
 import bcrypt from "bcryptjs";
 import { authenticateUser } from "../services/auth.service.user.js";
-import { generateToken } from "../utils/jwtUtils.js";
+import { generateToken } from "../utils/generate.jwt.js";
 import { isValidUserId } from "../utils/validators.js";
 
 export const database = new DatabasePostgres();
